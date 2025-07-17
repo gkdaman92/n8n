@@ -1,177 +1,16 @@
-  {
+{
   "name": "n8n-monorepo",
   "version": "1.103.0",
   "private": true,
   "engines": {
-    "node": ">=22.16",
+    "node": ">=18.17 <=22",
     "pnpm": ">=10.2.1"
   },
   "packageManager": "pnpm@10.12.1",
   "scripts": {
-    {
-	"$schema": "https://turbo.build/schema.json",
-	"ui": "stream",
-	"remoteCache": {
-		"enabled": true,
-		"timeout": 90,
-		"uploadTimeout": 90
-	},
-	"globalEnv": ["CI", "COVERAGE_ENABLED"],
-	"tasks": {
-		"clean": {
-			"cache": false
-		},
-		"build:playwright": {
-			"dependsOn": ["install-browsers:ci", "build"]
-		},
-		"build:backend": {
-			"dependsOn": ["n8n#build"]
-		},
-		"build:frontend": {
-			"dependsOn": ["n8n-editor-ui#build"]
-		},
-		"build:nodes": {
-			"dependsOn": ["n8n-nodes-base#build", "@n8n/n8n-nodes-langchain#build"]
-		},
-		"build": {
-			"dependsOn": ["^build"],
-			"outputs": ["dist/**"]
-		},
-		"typecheck": {
-			"dependsOn": ["^typecheck"]
-		},
-		"format": {},
-		"format:check": {},
-		"lint:backend": {
-			"dependsOn": [
-				"@n8n/eslint-config#build",
-				"^build",
-				"@n8n/api-types#lint",
-				"@n8n/config#lint",
-				"@n8n/decorators#lint",
-				"@n8n/constants#lint",
-				"@n8n/backend-common#lint",
-				"@n8n/backend-test-utils#lint",
-				"@n8n/db#lint",
-				"@n8n/di#lint",
-				"@n8n/client-oauth2#lint",
-				"@n8n/imap#lint",
-				"@n8n/permissions#lint",
-				"@n8n/task-runner#lint",
-				"n8n-workflow#lint",
-				"n8n-core#lint",
-				"n8n-node-dev#lint",
-				"n8n#lint"
-			]
-		},
-		"lint:frontend": {
-			"dependsOn": [
-				"@n8n/eslint-config#build",
-				"^build",
-				"@n8n/rest-api-client#lint",
-				"@n8n/api-types#lint",
-				"@n8n/constants#lint",
-				"@n8n/i18n#lint",
-				"@n8n/permissions#lint",
-				"@n8n/stores#lint",
-				"@n8n/utils#lint",
-				"@n8n/chat#lint",
-				"@n8n/codemirror-lang#lint",
-				"@n8n/storybook#lint",
-				"n8n-cypress#lint",
-				"@n8n/composables#build",
-				"@n8n/design-system#lint",
-				"n8n-editor-ui#lint"
-			]
-		},
-		"lint:nodes": {
-			"dependsOn": [
-				"@n8n/eslint-config#build",
-				"^build",
-				"n8n-nodes-base#lint",
-				"@n8n/n8n-nodes-langchain#lint",
-				"@n8n/json-schema-to-zod#lint"
-			]
-		},
-		"lint": {
-			"dependsOn": ["^build", "@n8n/eslint-config#build"]
-		},
-		"lintfix": {},
-		"test:backend": {
-			"dependsOn": [
-				"@n8n/api-types#test",
-				"@n8n/config#test",
-				"@n8n/decorators#test",
-				"@n8n/db#test",
-				"@n8n/di#test",
-				"@n8n/client-oauth2#test",
-				"@n8n/imap#test",
-				"@n8n/permissions#test",
-				"@n8n/task-runner#test",
-				"n8n-workflow#test",
-				"n8n-core#test",
-				"n8n#test"
-			],
-			"outputs": ["coverage/**", "junit.xml", "cobertura-coverage.xml"],
-			"inputs": ["jest.config.*", "package.json", "pnpm-lock.yaml"]
-		},
-		"test:frontend": {
-			"dependsOn": [
-				"@n8n/rest-api-client#test",
-				"@n8n/api-types#test",
-				"@n8n/constants#test",
-				"@n8n/i18n#test",
-				"@n8n/permissions#test",
-				"@n8n/stores#test",
-				"@n8n/utils#test",
-				"@n8n/chat#test",
-				"@n8n/codemirror-lang#test",
-				"@n8n/composables#build",
-				"@n8n/design-system#test",
-				"n8n-editor-ui#test"
-			],
-			"outputs": ["coverage/**", "junit.xml", "cobertura-coverage.xml"],
-			"inputs": ["jest.config.*", "package.json", "pnpm-lock.yaml"]
-		},
-		"test:nodes": {
-			"dependsOn": [
-				"n8n-nodes-base#test",
-				"@n8n/n8n-nodes-langchain#test",
-				"@n8n/json-schema-to-zod#test"
-			],
-			"outputs": ["coverage/**", "junit.xml", "cobertura-coverage.xml"],
-			"inputs": ["jest.config.*", "package.json", "pnpm-lock.yaml"]
-		},
-		"test": {
-			"outputs": ["coverage/**", "junit.xml", "cobertura-coverage.xml"]
-		},
-		"watch": {
-			"cache": false,
-			"persistent": true
-		},
-		"dev": {
-			"cache": false,
-			"persistent": true
-		},
-		"install-browsers:ci": {
-			"cache": true,
-			"inputs": ["package.json"],
-			"outputs": ["ms-playwright-cache/**"],
-			"env": ["PLAYWRIGHT_BROWSERS_PATH"]
-		},
-		"install-browsers:local": {
-			"cache": false,
-			"inputs": ["package.json"]
-		},
-		"test:standard": {
-			"dependsOn": ["install-browsers:local"],
-			"cache": false
-		}
-	}
-}
     "prepare": "node scripts/prepare.mjs",
     "preinstall": "node scripts/block-npm-install.js",
-    "build": "turbo run build",
+    "build": "NODE_OPTIONS=\"--max_old_space_size=2048\" turbo run build",
     "build:backend": "turbo run build:backend",
     "build:frontend": "turbo run build:frontend",
     "build:nodes": "turbo run build:nodes",
@@ -245,9 +84,7 @@
     "zx": "^8.1.4"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "sqlite3"
-    ],
+    "onlyBuiltDependencies": ["sqlite3"],
     "overrides": {
       "@azure/identity": "^4.3.0",
       "@types/node": "^20.17.50",
@@ -268,20 +105,6 @@
       "brace-expansion@2": "2.0.2",
       "date-fns": "2.30.0",
       "date-fns-tz": "2.0.0"
-    },
-    "patchedDependencies": {
-      "bull@4.16.4": "patches/bull@4.16.4.patch",
-      "pdfjs-dist@5.3.31": "patches/pdfjs-dist@5.3.31.patch",
-      "pkce-challenge@5.0.0": "patches/pkce-challenge@5.0.0.patch",
-      "@types/express-serve-static-core@5.0.6": "patches/@types__express-serve-static-core@5.0.6.patch",
-      "@types/ws@8.18.1": "patches/@types__ws@8.18.1.patch",
-      "@types/uuencode@0.0.3": "patches/@types__uuencode@0.0.3.patch",
-      "vue-tsc@2.2.8": "patches/vue-tsc@2.2.8.patch",
-      "element-plus@2.4.3": "patches/element-plus@2.4.3.patch",
-      "js-base64": "patches/js-base64.patch",
-      "ics": "patches/ics.patch",
-      "minifaker": "patches/minifaker.patch",
-      "z-vue-scan": "patches/z-vue-scan.patch"
     }
   }
 }
