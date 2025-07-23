@@ -1,12 +1,11 @@
-# Exported from Render on 2025-07-17T02:16:34Z
 services:
-- type: web
-  name: n8n
-  runtime: node
-  repo: https://github.com/gkdaman92/n8n
-  plan: free
-  region: ohio
-  buildCommand: pnpm install --frozen-lockfile; pnpm run build
-  startCommand: pnpm run start
-  autoDeployTrigger: commit
+  - type: web
+    name: n8n
+    runtime: node
+    repo: https://github.com/gkdaman92/n8n
+    plan: free
+    region: ohio
+    buildCommand: pnpm install && pnpm run build
+    startCommand: pnpm run start
+    autoDeployTrigger: commit
 version: "1"
